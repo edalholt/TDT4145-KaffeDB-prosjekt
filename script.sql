@@ -76,16 +76,22 @@ CREATE TABLE "sendesTil" (
 	FOREIGN KEY("partiID") REFERENCES "kaffeparti"("partiID")
 );
 
+CREATE TABLE "brenningsgrad" (
+	"brenningsgrad"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("brenningsgrad")
+);
+
 CREATE TABLE "ferdigbrendt_kaffe" (
-	"batchNr"	INTEGER NOT NULL UNIQUE,
+	"kaffeID"	INTEGER NOT NULL UNIQUE,
 	"navn"	TEXT NOT NULL,
 	"brenningsgrad"	TEXT NOT NULL,
 	"dato"	INTEGER NOT NULL,
 	"beskrivelse"	TEXT NOT NULL,
 	"kronerPerKg"	INTEGER NOT NULL,
 	"brenneriID"	INTEGER NOT NULL,
+	PRIMARY KEY("kaffeID" AUTOINCREMENT),
 	FOREIGN KEY("brenneriID") REFERENCES "kaffebrenneri"("brenneriID"),
-	PRIMARY KEY("batchNr" AUTOINCREMENT)
+	FOREIGN KEY("brenningsgrad") REFERENCES "brenningsgrad"("brenningsgrad")
 );
 
 CREATE TABLE "bruker" (
