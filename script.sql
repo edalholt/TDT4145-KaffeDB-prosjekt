@@ -33,6 +33,12 @@ CREATE TABLE "kaffesort" (
 	PRIMARY KEY("navn")
 );
 
+CREATE TABLE "foredlingsmetode" (
+	"metodenavn"	TEXT NOT NULL UNIQUE,
+	"beskrivelse"	TEXT NOT NULL,
+	PRIMARY KEY("metodenavn")
+);
+
 CREATE TABLE "kaffeparti" (
 	"partiID"	INTEGER NOT NULL UNIQUE,
 	"hoesteaar"	INTEGER NOT NULL,
@@ -41,12 +47,6 @@ CREATE TABLE "kaffeparti" (
 	"metodenavn"	TEXT NOT NULL,
 	FOREIGN KEY("metodenavn") REFERENCES "foredlingsmetode"("metodenavn"),
 	PRIMARY KEY("partiID" AUTOINCREMENT)
-);
-
-CREATE TABLE "foredlingsmetode" (
-	"metodenavn"	TEXT NOT NULL UNIQUE,
-	"beskrivelse"	TEXT NOT NULL,
-	PRIMARY KEY("metodenavn")
 );
 
 CREATE TABLE "dyrkesAv" (
@@ -89,7 +89,9 @@ CREATE TABLE "ferdigbrendt_kaffe" (
 	"beskrivelse"	TEXT NOT NULL,
 	"kronerPerKg"	INTEGER NOT NULL,
 	"brenneriID"	INTEGER NOT NULL,
+	"partiID"	INTEGER NOT NULL,
 	PRIMARY KEY("kaffeID" AUTOINCREMENT),
+	FOREIGN KEY("partiID") REFERENCES "kaffeparti"("partiID"),
 	FOREIGN KEY("brenneriID") REFERENCES "kaffebrenneri"("brenneriID"),
 	FOREIGN KEY("brenningsgrad") REFERENCES "brenningsgrad"("brenningsgrad")
 );
