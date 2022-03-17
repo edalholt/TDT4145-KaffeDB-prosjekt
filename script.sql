@@ -28,7 +28,7 @@ CREATE TABLE "kaffeboenne" (
 
 CREATE TABLE "kaffesort" (
 	"navn"	TEXT NOT NULL UNIQUE,
-	"art"	INTEGER NOT NULL,
+	"art"	TEXT NOT NULL,
 	FOREIGN KEY("art") REFERENCES "kaffeboenne"("art"),
 	PRIMARY KEY("navn")
 );
