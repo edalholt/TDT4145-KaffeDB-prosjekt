@@ -17,7 +17,7 @@ def login():
     else:
         print("\nDet finner ingen bruker som matcher denne kombinasjonen!")
         done = input('\nVil du prøve på nytt? (y/n)')
-        if done == 'y':
+        if done == 'n':
             exit()
         login()
         
@@ -28,7 +28,7 @@ def program(brukerdata):
     Remember con.commit() after database update
     """
     print("Du er nå logget inn som " + str(brukerdata[1]))
-    print('Tast "k" for å opprette en ny kaffesmak-post\nTast "d" for å legge inn ny data\n Tast "x" for å avslutte')
+    print('Tast "k" for å opprette en ny kaffesmak-post\nTast "d" for å legge inn ny data\nTast "x" for å avslutte')
     while True:
         valg = str(input(""))
         match valg:
