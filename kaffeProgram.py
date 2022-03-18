@@ -33,8 +33,16 @@ def program(brukerdata):
         valg = str(input(""))
         match valg:
             case 'k':
+                kaffe_navn = str(input('Hvilken kaffe smakte du på? '))
+                byggeri_navn = str(input('Hvilket bryggeri kommer den fra? '))
+                poeng = int(input('Hvor mange poeng gir du den?(0-10) '))
+                notat = str(input('Legg gjerne til et notat som beskriver kaffen: '))
+                #utifra denne dataen skal brukerhistorie 1 oppfylles    
                 pass
             case 'd':
+                print('Så spennende med ny data!')
+                valg = str(input('''Hva vil du legge inn data om?\n
+                '''))
                 pass
             case 'x':
                 exit()
