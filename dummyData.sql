@@ -13,7 +13,5 @@ INSERT INTO kaffebrenneri (navn) VALUES ('Jacobsen & Svart');
 INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Vinterkaffe 2022','lysbrent',20012022,'Bærsøt og delikat med toner av tørket frukt, røde hagebær og karamell.', 600, 1, 1);
 INSERT INTO dyrkesAv (art, gaardsID) VALUES ('coffea arabica', 1);
 INSERT INTO bestaarAv (art, partiID) VALUES ('coffea arabica', 1);
-INSERT INTO kaffesmaking (notat, poeng, dato, brukerID) VALUES (' «Wow
-– en odyssé for smaksløkene: sitrusskall, melkesjokolade, aprikos!»', 10, 20220310, 1);
 INSERT INTO sendesTil (brenneriID, partiID) VALUES (1, 1);
 

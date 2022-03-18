@@ -110,7 +110,9 @@ CREATE TABLE "kaffesmaking" (
 	"poeng"	INTEGER NOT NULL,
 	"dato"	INTEGER NOT NULL,
 	"brukerID"	INTEGER NOT NULL,
+	"kaffeID"	INTEGER NOT NULL,
 	FOREIGN KEY("brukerID") REFERENCES "bruker"("brukerID"),
+	FOREIGN KEY("kaffeID") REFERENCES "ferdigbrendt_kaffe"("kaffeID"),
 	PRIMARY KEY("smakID" AUTOINCREMENT)
 );
 
