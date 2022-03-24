@@ -1,10 +1,11 @@
 --Brukerhistorie 1
 
---Brukerhistorie 2
+--Brukerhistorie 2 - Bytt ut 2022 med current year i python
 SELECT bruker.fulltNavn, count(DISTINCT kaffesmaking.kaffeID) as ulikeKaffer FROM kaffesmaking
 INNER JOIN bruker
-ON bruker.brukerID = kaffesmaking.brukerID
+ON bruker.brukerID = kaffesmaking.brukerID AND date(kaffesmaking.dato) >= date('2022-01-01')
 GROUP BY bruker.brukerID
+ORDER BY ulikeKaffer ASC
 
 --Brukerhistorie 3
 SELECT  kaffebrenneri.navn AS brennerinavn, ferdigbrendt_kaffe.navn AS kaffenavn, ferdigbrendt_kaffe.kronerPerKg, round((AVG(kaffesmaking.poeng)/ferdigbrendt_kaffe.kronerPerKg )*1000, 2) AS gjennomsnittscore
