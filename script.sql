@@ -131,7 +131,7 @@ INSERT INTO kaffeboenne (art) VALUES ('coffea arabica');
 INSERT INTO kaffesort (navn, art) VALUES ('Bourbon', 'coffea arabica');
 INSERT INTO kaffebrenneri (navn) VALUES ('Jacobsen & Svart');
 INSERT INTO kaffebrenneri (navn) VALUES ('Oslo kaffebrenneri');
-INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Vinterkaffe 2022','lysbrent',date('2022-03-10'),'Bærsøt og delikat med toner av tørket frukt, røde hagebær og karamell.', 600, 1, 1);
+INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Vinterkaffe 2022','lysbrent',date('2022-01-20'),'Bærsøt og delikat med toner av tørket frukt, røde hagebær og karamell.', 600, 1, 1);
 INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Sommerkaffe 2021','lysbrent',date('2021-07-10'),'god', 300, 2, 1);
 INSERT INTO dyrkesAv (art, gaardsID) VALUES ('coffea arabica', 1);
 INSERT INTO bestaarAv (art, partiID) VALUES ('coffea arabica', 1);
