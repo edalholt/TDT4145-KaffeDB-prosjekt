@@ -116,3 +116,31 @@ CREATE TABLE "kaffesmaking" (
 	PRIMARY KEY("smakID" AUTOINCREMENT)
 );
 
+--Dummy data
+INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('ola@nordmann.no', 'kaffenorge', 'Ola Nordmann');
+INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('bob@nordmann.no', 'kaffe', 'Bob Nordmann');
+INSERT INTO land (navn) VALUES ('El Salvador');
+INSERT INTO region (navn, landID) VALUES ('Santa Ana', 1);
+INSERT INTO kaffegaard (navn, MOH, regionID) VALUES ('Nombre de Dios', 1500, 1);
+INSERT INTO brenningsgrad (brenningsgrad) VALUES ('lysbrent');
+INSERT INTO brenningsgrad (brenningsgrad) VALUES ('medium brent');
+INSERT INTO brenningsgrad (brenningsgrad) VALUES ('mørkbrent');
+INSERT INTO foredlingsmetode (metodenavn, beskrivelse) VALUES ('bærtørket','Hele Kaffebæret tørkes. Med denne prosesseringen fjernes verken skallet eller fruktkjøttet før tørking. Denne prosesseringen gir ofte mer fyldige kaffe med stor munnfølelse. Denne prosesseringen kalles også for Natural.');
+INSERT INTO kaffeparti (hoesteaar, USDPerKG, gaardsID, metodenavn) VALUES (2021, 8, 1, 'bærtørket');
+INSERT INTO kaffeboenne (art) VALUES ('coffea arabica');
+INSERT INTO kaffesort (navn, art) VALUES ('Bourbon', 'coffea arabica');
+INSERT INTO kaffebrenneri (navn) VALUES ('Jacobsen & Svart');
+INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Vinterkaffe 2022','lysbrent',date('2022-03-10'),'Bærsøt og delikat med toner av tørket frukt, røde hagebær og karamell.', 600, 1, 1);
+INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Sommerkaffe 2021','lysbrent',date('2021-07-10'),'god', 300, 1, 1);
+INSERT INTO dyrkesAv (art, gaardsID) VALUES ('coffea arabica', 1);
+INSERT INTO bestaarAv (art, partiID) VALUES ('coffea arabica', 1);
+INSERT INTO sendesTil (brenneriID, partiID) VALUES (1, 1);
+
+--Ekstra
+INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES ('veldig god', 10, date(), 1, 1);
+INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES ('ganske god', 5, date('2022-02-10'), 1, 2);
+INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES ('God nok', 8, date('2022-02-10'), 1, 2);
+
+
+
+
