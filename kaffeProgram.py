@@ -9,9 +9,26 @@ cursor = con.cursor()
 
 def login():
     """"Login"""""
-    """ ola@nordmann.no  kaffenorge """
+    """Testbruker: ola@nordmann.no  Passord: kaffenorge """
+
+
+    print('''
+        (  )   (   )
+     ) (   )  (  (
+     ( )  (    ) )
+     _____________
+    <_____________> ___
+    |             |/ _ |
+    |               | | |
+    |               |_| |
+ ___|             |\___/
+/    \___________/    |
+\_____________________/
+    ''')
+
+
     print("Hei, velkommen til kaffeDB")
-    print("Vennligst logg inn")
+    print("Vennligst logg inn\n")
 
     epost = str(input("E-post: "))
     passord = str(input("Passord: "))
@@ -29,19 +46,32 @@ def login():
         
 
 def program(brukerdata):
-    print("Du er nå logget inn som " + str(brukerdata[1]))
-    valg = str(input('Hvilken brukerhistorie ønsker du å utføre? (1-5) '))
-    match valg:
-        case '1':
-            brukerhistorie1(brukerdata[0])
-        case '2':
-            brukerhistorie2()
-        case '3':
-            brukerhistorie3()
-        case '4':
-            brukerhistorie4()
-        case '5':
-            brukerhistorie5()
+    print("\nDu er nå logget inn som " + str(brukerdata[1]))
+    print("_"*80)
+    print('''
+Tast "1" for å opprette en ny kaffesmak-post
+Tast "2" for å se brukere rangert etter kaffer smakt
+Tast "3" for å se de ulike kaffene rangert forhold mellom score og pris
+Tast "4" for å søke etter kaffer som er blitt beskrevet med søkeordet
+Tast "5" for å se kaffer fra Rwanda og Colombia som ikke er vaskede
+Tast "x" for å avslutte''')
+    print("_"*80, "\n")
+
+    while True:
+        valg = str(input('Valg: '))
+        match valg:
+            case '1':
+                brukerhistorie1(brukerdata[0])
+            case '2':
+                brukerhistorie2()
+            case '3':
+                brukerhistorie3()
+            case '4':
+                brukerhistorie4()
+            case '5':
+                brukerhistorie5()
+            case 'x':
+                quit()
 
 
 def brukerhistorie1(brukerID):
@@ -112,7 +142,7 @@ def brukerhistorie4():
     """ En bruker kan søke etter kaffer som er blitt beskrevet med søkeordet,
     enten av brukere eller brennerier. Brukeren skal få tilbake en liste med
     brennerinavn og kaffenavn. """
-    
+
     print("Her kan du søke etter kaffer som er blitt beskrevet med søkeordet, enten av brukere eller brennerier")
     sok = str(input('Søkeord: '))
 
@@ -136,13 +166,12 @@ def brukerhistorie4():
             print("-", resultat[i][0], "fra", resultat[i][1])
         print("-"*72)
 
-""" 
-En annen bruker er lei av å bli skuffet av vaskede kaffer og deres tidvis kjedelige smak, og ønsker derfor å søke etter kaffer fra Rwanda
-og Colombia som ikke er vaskede. Systemet returnerer en liste over
-brennerinavn og kaffenavn.
-"""
 
 def brukerhistorie5():
+    """ En annen bruker er lei av å bli skuffet av vaskede kaffer og deres tidvis kjedelige smak, og ønsker derfor å søke etter kaffer fra Rwanda
+    og Colombia som ikke er vaskede. Systemet returnerer en liste over
+    brennerinavn og kaffenavn."""
+
     cursor.execute("""SELECT DISTINCT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
                         FROM ferdigbrendt_kaffe
                         INNER JOIN kaffeparti
@@ -158,20 +187,21 @@ def brukerhistorie5():
                         INNER JOIN land
                         ON land.landID = region.regionID
                         WHERE land.navn = 'Rwanda' OR land.navn = 'Colombia' """)
-    brukerdata = cursor.fetchall()
-    print(brukerdata)
-    fortsett = str(input('Ønsker du å prøve en ny brukerhistorie? (y/n) '))
-    match fortsett:
-        case 'y':
-            login()
-        case 'n':
-            exit()
+    resultat = cursor.fetchall()
+
+    if(len(resultat) < 1):
+        print("Ingen kaffer i databasen som matcher søket")
+    else:
+        print("\n----Kaffer i databasen fra Rwanda og Colombia som ikke er vaskede----\n")
+        for i in range(len(resultat)):
+            print("-", resultat[i][0], "fra brenneriet", resultat[i][1])
+        print("-"*72)
 
 
 def main():
     """ Main """
-    #login()
-    program([1, "ola"])
+    login()
+    #program([1, "ola"])
     con.close()
 
 

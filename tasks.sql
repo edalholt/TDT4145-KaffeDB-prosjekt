@@ -14,7 +14,7 @@ SELECT bruker.fulltNavn, count(DISTINCT kaffesmaking.kaffeID) as ulikeKaffer FRO
 INNER JOIN bruker
 ON bruker.brukerID = kaffesmaking.brukerID AND date(kaffesmaking.dato) >= date('2022-01-01')
 GROUP BY bruker.brukerID
-ORDER BY ulikeKaffer ASC
+ORDER BY ulikeKaffer DESC
 
 --Brukerhistorie 3
 SELECT  kaffebrenneri.navn AS brennerinavn, ferdigbrendt_kaffe.navn AS kaffenavn, ferdigbrendt_kaffe.kronerPerKg, round((AVG(kaffesmaking.poeng)/ferdigbrendt_kaffe.kronerPerKg )*1000, 2) AS gjennomsnittscore

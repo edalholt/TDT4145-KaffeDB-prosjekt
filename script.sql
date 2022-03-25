@@ -121,22 +121,41 @@ INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('ola@nordmann.no', 'kaffe
 INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('bob@nordmann.no', 'kaffe', 'Bob Nordmann');
 INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('evergood@nordmann.no', 'kaffe', 'Per Olsen');
 INSERT INTO land (navn) VALUES ('El Salvador');
+INSERT INTO land (navn) VALUES ('Rwanda');
+INSERT INTO land (navn) VALUES ('Colombia');
 INSERT INTO region (navn, landID) VALUES ('Santa Ana', 1);
+INSERT INTO region (navn, landID) VALUES ('Ngoma', 2);
+INSERT INTO region (navn, landID) VALUES ('Coastal', 3);
 INSERT INTO kaffegaard (navn, MOH, regionID) VALUES ('Nombre de Dios', 1500, 1);
+INSERT INTO kaffegaard (navn, MOH, regionID) VALUES ('Coffe del costa', 100, 3);
+INSERT INTO kaffegaard (navn, MOH, regionID) VALUES ('Farmer Carlos', 1000, 2);
 INSERT INTO brenningsgrad (brenningsgrad) VALUES ('lysbrent');
 INSERT INTO brenningsgrad (brenningsgrad) VALUES ('medium brent');
 INSERT INTO brenningsgrad (brenningsgrad) VALUES ('mørkbrent');
 INSERT INTO foredlingsmetode (metodenavn, beskrivelse) VALUES ('bærtørket','Hele Kaffebæret tørkes. Med denne prosesseringen fjernes verken skallet eller fruktkjøttet før tørking. Denne prosesseringen gir ofte mer fyldige kaffe med stor munnfølelse. Denne prosesseringen kalles også for Natural.');
+INSERT INTO foredlingsmetode (metodenavn, beskrivelse) VALUES ('vasket','Kaffebønnen fermenteres før den vaskes og legges til tørk');
 INSERT INTO kaffeparti (hoesteaar, USDPerKG, gaardsID, metodenavn) VALUES (2021, 8, 1, 'bærtørket');
+INSERT INTO kaffeparti (hoesteaar, USDPerKG, gaardsID, metodenavn) VALUES (2020, 7, 2, 'bærtørket');
+INSERT INTO kaffeparti (hoesteaar, USDPerKG, gaardsID, metodenavn) VALUES (2021, 10, 3, 'vasket');
 INSERT INTO kaffeboenne (art) VALUES ('coffea arabica');
 INSERT INTO kaffesort (navn, art) VALUES ('Bourbon', 'coffea arabica');
 INSERT INTO kaffebrenneri (navn) VALUES ('Jacobsen & Svart');
 INSERT INTO kaffebrenneri (navn) VALUES ('Oslo kaffebrenneri');
 INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Vinterkaffe 2022','lysbrent',date('2022-01-20'),'Bærsøt og delikat med toner av tørket frukt, røde hagebær og karamell.', 600, 1, 1);
 INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Sommerkaffe 2021','lysbrent',date('2021-07-10'),'god', 300, 2, 1);
+INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Washed dream','medium brent',date('2020-05-10'),'god med et hint av florale smaker', 400, 2, 3);
+INSERT INTO ferdigbrendt_kaffe (navn, brenningsgrad,dato,beskrivelse,kronerPerKg,brenneriID, partiID) VALUES ('Colombian dream','medium brent',date('2021-05-10'),'Colombiansk kaffekultur i hver smak', 350, 1, 2);
 INSERT INTO dyrkesAv (art, gaardsID) VALUES ('coffea arabica', 1);
 INSERT INTO bestaarAv (art, partiID) VALUES ('coffea arabica', 1);
 INSERT INTO sendesTil (brenneriID, partiID) VALUES (1, 1);
+
+INSERT INTO dyrkesAv (art, gaardsID) VALUES ('coffea arabica', 1);
+INSERT INTO dyrkesAv (art, gaardsID) VALUES ('coffea arabica', 2);
+INSERT INTO dyrkesAv (art, gaardsID) VALUES ('coffea arabica', 3);
+
+INSERT INTO bestaarAv (art, partiID) VALUES ('coffea arabica', 1);
+INSERT INTO bestaarAv (art, partiID) VALUES ('coffea arabica', 2);
+INSERT INTO bestaarAv (art, partiID) VALUES ('coffea arabica', 3);
 
 --Ekstra
 INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES ('veldig god', 10, date(), 1, 1);
