@@ -1,5 +1,4 @@
 --Brukerhistorie 1
-
 SELECT kaffebrenneri.navn, kaffebrenneri.brenneriID, ferdigbrendt_kaffe.kaffeID
 FROM kaffebrenneri
 JOIN ferdigbrendt_kaffe
@@ -7,7 +6,6 @@ JOIN ferdigbrendt_kaffe
 WHERE ferdigbrendt_kaffe.navn = "Sommerkaffe 2021" AND kaffebrenneri.navn = "Jacobsen & Svart";
 
 INSERT INTO kaffesmaking (notat,poeng, dato, brukerID, kaffeID) VALUES ();
-
 
 --Brukerhistorie 2 - Bytt ut 2022 med current year i python
 SELECT bruker.fulltNavn, count(DISTINCT kaffesmaking.kaffeID) as ulikeKaffer FROM kaffesmaking
