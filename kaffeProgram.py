@@ -19,8 +19,8 @@ def login():
      _____________
     <_____________> ___
     |             |/ _ |
-    |               | | |
-    |               |_| |
+    | Gruppe 158  | | |
+    |    2022     |_| |
  ___|             |\___/
 /    \___________/    |
 \_____________________/
@@ -76,7 +76,32 @@ Tast "x" for å avslutte''')
 
 def brukerhistorie1(brukerID):
     """Sommerkaffe 2021 Oslo kaffebrenneri """
+
+    cursor.execute('SELECT navn from kaffebrenneri;')
+    brenneriValg = cursor.fetchall()
+    if(len(brenneriValg) < 1):
+        print("Ingen kaffebrenneri er registrert")
+    else:
+        print("\n----Oversikt over kaffebrenneri i database----\n")
+        for i in range(len(brenneriValg)):
+            print(brenneriValg[i][0])
+        print("-"*50, "\n")
+
+
     brenneriNavn = str(input('Kaffebrenneri: '))
+
+    cursor.execute('''SELECT ferdigbrendt_kaffe.navn from ferdigbrendt_kaffe INNER JOIN kaffebrenneri
+                      ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
+                      AND kaffebrenneri.navn = :brenneri;''', {"brenneri": brenneriNavn})
+    brenneriKaffe = cursor.fetchall()
+    if(len(brenneriKaffe) < 1):
+        print(f"Ingen kaffer er registrert på {brenneriNavn}")
+    else:
+        print(f"\n----Oversikt over kaffer brent av {brenneriNavn}----\n")
+        for i in range(len(brenneriKaffe)):
+            print(brenneriKaffe[i][0])
+        print("-"*50, "\n")
+
     kaffeNavn = str(input('Kaffenavn: '))
 
     cursor.execute('''SELECT ferdigbrendt_kaffe.kaffeID
@@ -88,7 +113,7 @@ def brukerhistorie1(brukerID):
     ferdigKaffe = cursor.fetchone()
     if (not ferdigKaffe):
         print("Det finnes ingen kaffe i databasen med valgt navn")
-        login()
+        program(brukerID)
     else:
         print("Kaffe finnes i databasen og er valgt")
 
@@ -96,7 +121,7 @@ def brukerhistorie1(brukerID):
         poeng = int(input('Poeng (1-10): '))
         cursor.execute('INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES (:notat, :poeng, date(), :brukerID, :ferdigKaffe);', {"notat": notat, "poeng": poeng, "brukerID": brukerID, "ferdigKaffe": ferdigKaffe[0]})
         con.commit()
-        print("Kaffesmak er opprettet")
+        print("Kaffesmak er opprettet\n")
 
 
 def brukerhistorie2():
