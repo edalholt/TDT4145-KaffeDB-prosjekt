@@ -11,26 +11,7 @@ def login():
     """"Login"""""
     """Testbruker: ola@nordmann.no  Passord: kaffenorge """
 
-
-    print('''
-        (  )   (   )
-     ) (   )  (  (
-     ( )  (    ) )
-     _____________
-    <_____________> ___
-    |             |/ _ |
-    | Gruppe 158  | | |
-    |    2022     |_| |
- ___|             |\___/
-/    \___________/    |
-\_____________________/
-    ''')
-
-
-    print("Hei, velkommen til kaffeDB")
-    print("Vennligst logg inn\n")
-
-    epost = str(input("E-post: "))
+    epost = str(input("\nE-post: "))
     passord = str(input("Passord: "))
     cursor.execute(
         "SELECT brukerID, fulltNavn FROM bruker WHERE epost =? AND passord =?;", (epost, passord))
@@ -41,6 +22,7 @@ def login():
         print("\nDet finnes ingen bruker som matcher denne kombinasjonen!")
         done = input('\nVil du prøve på nytt? (y/n)')
         if done == 'n':
+            con.close()
             exit()
         login()
         
@@ -55,10 +37,10 @@ Tast "3" for å se de ulike kaffene rangert forhold mellom score og pris
 Tast "4" for å søke etter kaffer som er blitt beskrevet med søkeordet
 Tast "5" for å se kaffer fra Rwanda og Colombia som ikke er vaskede
 Tast "x" for å avslutte''')
-    print("_"*80, "\n")
+    print("_"*80)
 
     while True:
-        valg = str(input('Valg: '))
+        valg = str(input('\nValg: '))
         match valg:
             case '1':
                 brukerhistorie1(brukerdata[0])
@@ -71,11 +53,12 @@ Tast "x" for å avslutte''')
             case '5':
                 brukerhistorie5()
             case 'x':
+                con.close()
                 quit()
 
 
 def brukerhistorie1(brukerID):
-    """Sommerkaffe 2021 Oslo kaffebrenneri """
+    """ """
 
     cursor.execute('SELECT navn from kaffebrenneri;')
     brenneriValg = cursor.fetchall()
@@ -225,9 +208,42 @@ def brukerhistorie5():
 
 def main():
     """ Main """
-    login()
-    #program([1, "ola"])
-    con.close()
+
+
+    print('''
+        (  )   (   )
+     ) (   )  (  (
+     ( )  (    ) )
+     _____________
+    <_____________> ___
+    |             |/ _ |
+    | Gruppe 158  | | |
+    |    2022     |_| |
+ ___|             |\___/
+/    \___________/    |
+\_____________________/
+    ''')
+
+
+    print("Hei, velkommen til kaffeDB\n")
+    print('Tast "1" for å logge inn\nTast "2" for å registrere bruker\nTast "x" for å avslutte\n') 
+    valg = str(input('Valg: '))
+    match valg:
+        case '1':
+            #Login
+            login()
+        case '2':
+            #Register, then login
+            navn = str(input("Fullt navn: "))
+            epost = str(input("E-post: "))
+            passord = str(input("Passord: "))
+            con.execute('''INSERT INTO bruker (epost, passord, fulltNavn) VALUES (:epost, :passord, :navn);''', {"epost": epost, "passord": passord, "navn": navn})
+            con.commit()
+            print("\nBruker er registrert\nLogg inn:")
+            login()
+        case 'x':
+            con.close()
+            exit()
 
 
 if __name__ == "__main__":
