@@ -107,22 +107,34 @@ def brukerhistorie3():
         print("-"*93)
     
 
-""" En bruker søker etter kaffer som er blitt beskrevet med ordet «floral»,
-enten av brukere eller brennerier. Brukeren skal få tilbake en liste med
-brennerinavn og kaffenavn. """
+
 def brukerhistorie4():
+    """ En bruker kan søke etter kaffer som er blitt beskrevet med søkeordet,
+    enten av brukere eller brennerier. Brukeren skal få tilbake en liste med
+    brennerinavn og kaffenavn. """
+    
+    print("Her kan du søke etter kaffer som er blitt beskrevet med søkeordet, enten av brukere eller brennerier")
+    sok = str(input('Søkeord: '))
+
     cursor.execute("""SELECT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
                     FROM ferdigbrendt_kaffe
                     INNER JOIN kaffebrenneri ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
-                    WHERE ferdigbrendt_kaffe.beskrivelse LIKE '%floral%'
+                    WHERE ferdigbrendt_kaffe.beskrivelse LIKE :keyword
                     UNION
                     SELECT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
                     FROM kaffesmaking
                     INNER JOIN ferdigbrendt_kaffe ON ferdigbrendt_kaffe.kaffeID = kaffesmaking.kaffeID
                     INNER JOIN kaffebrenneri ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
-                    WHERE kaffesmaking.notat LIKE '%floral%''""")
-    brukerdata = cursor.fetchall()
-    print(brukerdata)
+                    WHERE kaffesmaking.notat LIKE :keyword""", {"keyword": "%"+sok+"%"})
+    resultat = cursor.fetchall()
+    
+    if(len(resultat) < 1):
+        print("Ingen resultat med angitt søkeord")
+    else:
+        print(f"\n----Liste over kaffer som er blitt beskrevet med søkeordet {sok}----\n")
+        for i in range(len(resultat)):
+            print("-", resultat[i][0], "fra", resultat[i][1])
+        print("-"*72)
 
 """ 
 En annen bruker er lei av å bli skuffet av vaskede kaffer og deres tidvis kjedelige smak, og ønsker derfor å søke etter kaffer fra Rwanda
@@ -158,8 +170,8 @@ def brukerhistorie5():
 
 def main():
     """ Main """
-    login()
-    #program([1, "ola"])
+    #login()
+    program([1, "ola"])
     con.close()
 
 
