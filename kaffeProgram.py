@@ -2,23 +2,26 @@ import sqlite3
 from datetime import date
 
 today = date.today()
-
 con = sqlite3.connect("kaffe.db")
 cursor = con.cursor()
 
 
 def login():
-    """"Login"""""
+    """"Login meny"""""
     """Testbruker: ola@nordmann.no  Passord: kaffenorge """
 
     epost = str(input("\nE-post: "))
     passord = str(input("Passord: "))
+    #Velger bruker basert på input
     cursor.execute(
         "SELECT brukerID, fulltNavn FROM bruker WHERE epost =? AND passord =?;", (epost, passord))
     brukerdata = cursor.fetchone()
+    #Hvis bruker finnes sender vi videre til inlogget hovedmeny
     if (brukerdata):
+        #Sender videre [id, fulltNavn] som senere brukes til å opprette poster i brukerhistorie 1
         program(brukerdata)
     else:
+        #Nytt forsøk hvis innloggingen er feil
         print("\nDet finnes ingen bruker som matcher denne kombinasjonen!")
         done = input('\nVil du prøve på nytt? (y/n)')
         if done == 'n':
@@ -28,6 +31,9 @@ def login():
         
 
 def program(brukerdata):
+    """Hovedptogram - tar inn brukerid og navn til inlogget bruker
+    Fra menyen sendes bruker videre til ønsket funksjonalitet"""
+
     print("\nDu er nå logget inn som " + str(brukerdata[1]))
     print("_"*80)
     print('''
@@ -43,23 +49,31 @@ Tast "x" for å avslutte''')
         valg = str(input('\nValg: '))
         match valg:
             case '1':
+                #Oprette post
+                #Eneste funksjon som trenger å vite hvilken bruker som er innlogget
                 brukerhistorie1(brukerdata[0])
             case '2':
+                #Top kaffekonsumenter
                 brukerhistorie2()
             case '3':
+                #Kaffe etter pris og score
                 brukerhistorie3()
             case '4':
+                #Søk i beskrivelser
                 brukerhistorie4()
             case '5':
+                #Rwanda og Colombia som ikke er vaskede
                 brukerhistorie5()
             case 'x':
+                #Lukker tilkobling og avslutter
                 con.close()
                 quit()
 
 
 def brukerhistorie1(brukerID):
-    """ """
+    """Opprette en ny kaffesmak-post"""
 
+    #Data for å hjelpe bruker å velge et eksisterende brenneri
     cursor.execute('SELECT navn from kaffebrenneri;')
     brenneriValg = cursor.fetchall()
     if(len(brenneriValg) < 1):
@@ -70,9 +84,9 @@ def brukerhistorie1(brukerID):
             print(brenneriValg[i][0])
         print("-"*50, "\n")
 
-
     brenneriNavn = str(input('Kaffebrenneri: '))
 
+    #Data for å hjelpe bruker å velge en eksisterende kaffe fra valgt brenneri
     cursor.execute('''SELECT ferdigbrendt_kaffe.navn from ferdigbrendt_kaffe INNER JOIN kaffebrenneri
                       ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
                       AND kaffebrenneri.navn = :brenneri;''', {"brenneri": brenneriNavn})
@@ -95,7 +109,7 @@ def brukerhistorie1(brukerID):
 
     ferdigKaffe = cursor.fetchone()
     if (not ferdigKaffe):
-        print("Det finnes ingen kaffe i databasen med valgt navn")
+        print("Det finnes ingen kaffe i databasen med valgt navn og brenneri\n!Sendes til hovedmeny!\n")
         program(brukerID)
     else:
         print("Kaffe finnes i databasen og er valgt")
@@ -104,10 +118,12 @@ def brukerhistorie1(brukerID):
         poeng = int(input('Poeng (1-10): '))
         cursor.execute('INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES (:notat, :poeng, date(), :brukerID, :ferdigKaffe);', {"notat": notat, "poeng": poeng, "brukerID": brukerID, "ferdigKaffe": ferdigKaffe[0]})
         con.commit()
-        print("Kaffesmak er opprettet\n")
+        print("Kaffesmak-post er opprettet\n")
 
 
 def brukerhistorie2():
+    """Lister opp brukere rangert etter antall kaffer smakt synkende"""
+
     cursor.execute(f'''SELECT bruker.fulltNavn, count(DISTINCT kaffesmaking.kaffeID) as ulikeKaffer FROM kaffesmaking
                 INNER JOIN bruker
                 ON bruker.brukerID = kaffesmaking.brukerID AND date(kaffesmaking.dato) >= date("{today.year}-01-01")
@@ -125,6 +141,8 @@ def brukerhistorie2():
                 
 
 def brukerhistorie3():
+    """Liste de ulike kaffene rangert forhold til gjennomsnittsscore og pris"""
+
     cursor.execute("""
                     SELECT kaffebrenneri.navn AS brennerinavn, ferdigbrendt_kaffe.navn AS kaffenavn, ferdigbrendt_kaffe.kronerPerKg, round((AVG(kaffesmaking.poeng)/ferdigbrendt_kaffe.kronerPerKg )*1000, 2) AS gjennomsnittscore
                     FROM kaffesmaking
@@ -207,21 +225,18 @@ def brukerhistorie5():
 
 
 def main():
-    """ Main """
-
-
+    """ Hovedmeny for login og registrer"""
     print('''
-        (  )   (   )
+        (     (   )
      ) (   )  (  (
      ( )  (    ) )
      _____________
     <_____________> ___
     |             |/ _ |
-    | Gruppe 158  | | |
-    |    2022     |_| |
- ___|             |\___/
-/    \___________/    |
-\_____________________/
+    | Gruppe 158  | | ||
+    |    2022     |_| ||
+    |             |\___/
+     \___________/ 
     ''')
 
 
