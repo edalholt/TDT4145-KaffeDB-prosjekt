@@ -11,10 +11,9 @@ def login():
     """"Login"""""
     """ ola@nordmann.no  kaffenorge """
     print("Hei, velkommen til kaffeDB")
-    #print("Vennligst logg inn")
-    #mulighet for å registrere seg 
-    #(INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('ola@nordmann.no', 'kaffenorge', 'Ola Nordmann');)
-    """ epost = str(input("E-post: "))
+    print("Vennligst logg inn")
+
+    epost = str(input("E-post: "))
     passord = str(input("Passord: "))
     cursor.execute(
         "SELECT brukerID, fulltNavn FROM bruker WHERE epost =? AND passord =?;", (epost, passord))
@@ -22,35 +21,53 @@ def login():
     if (brukerdata):
         program(brukerdata)
     else:
-        print("\nDet finner ingen bruker som matcher denne kombinasjonen!")
+        print("\nDet finnes ingen bruker som matcher denne kombinasjonen!")
         done = input('\nVil du prøve på nytt? (y/n)')
         if done == 'n':
             exit()
-        login() """
-    bhist = str(input('Hvilken brukerhistorie ønsker du å utføre? (1-5) '))
-    match bhist:
+        login()
+        
+
+def program(brukerdata):
+    print("Du er nå logget inn som " + str(brukerdata[1]))
+    valg = str(input('Hvilken brukerhistorie ønsker du å utføre? (1-5) '))
+    match valg:
         case '1':
-            pass
+            brukerhistorie1(brukerdata[0])
         case '2':
             brukerhistorie2()
-            pass
         case '3':
             brukerhistorie3()
-            pass
         case '4':
             brukerhistorie4()
         case '5':
             brukerhistorie5()
-        
-""" En bruker søker etter kaffer som er blitt beskrevet med ordet «floral»,
-enten av brukere eller brennerier. Brukeren skal få tilbake en liste med
-brennerinavn og kaffenavn. """
-""" 
-kaffesmaking.notat
-ferdigbrent_kaffe.beskrivelse 
-"""
-def brukerhistorie1():
-    pass
+
+
+def brukerhistorie1(brukerID):
+    """Sommerkaffe 2021 Oslo kaffebrenneri """
+    brenneriNavn = str(input('Kaffebrenneri: '))
+    kaffeNavn = str(input('Kaffenavn: '))
+
+    cursor.execute('''SELECT ferdigbrendt_kaffe.kaffeID
+                    FROM kaffebrenneri
+                    JOIN ferdigbrendt_kaffe
+	                ON kaffebrenneri.brenneriID = ferdigbrendt_kaffe.brenneriID
+                    WHERE ferdigbrendt_kaffe.navn =? AND kaffebrenneri.navn =?;''', (kaffeNavn, brenneriNavn))
+
+    ferdigKaffe = cursor.fetchone()
+    if (not ferdigKaffe):
+        print("Det finnes ingen kaffe i databasen med valgt navn")
+        login()
+    else:
+        print("Kaffe finnes i databasen og er valgt")
+
+        notat = str(input('Kaffenotat: '))
+        poeng = int(input('Poeng (1-10): '))
+        cursor.execute('INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES (:notat, :poeng, date(), :brukerID, :ferdigKaffe);', {"notat": notat, "poeng": poeng, "brukerID": brukerID, "ferdigKaffe": ferdigKaffe[0]})
+        con.commit()
+        print("Kaffesmak er opprettet")
+
 
 def brukerhistorie2():
     cursor.execute(f'''SELECT bruker.fulltNavn, count(DISTINCT kaffesmaking.kaffeID) as ulikeKaffer FROM kaffesmaking
@@ -90,25 +107,22 @@ def brukerhistorie3():
         print("-"*93)
     
 
+""" En bruker søker etter kaffer som er blitt beskrevet med ordet «floral»,
+enten av brukere eller brennerier. Brukeren skal få tilbake en liste med
+brennerinavn og kaffenavn. """
 def brukerhistorie4():
     cursor.execute("""SELECT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
-FROM ferdigbrendt_kaffe
-INNER JOIN kaffebrenneri ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
-WHERE ferdigbrendt_kaffe.beskrivelse LIKE '%floral%'
-UNION
-SELECT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
-FROM kaffesmaking
-INNER JOIN ferdigbrendt_kaffe ON ferdigbrendt_kaffe.kaffeID = kaffesmaking.kaffeID
-INNER JOIN kaffebrenneri ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
-WHERE kaffesmaking.notat LIKE '%floral%''""")
+                    FROM ferdigbrendt_kaffe
+                    INNER JOIN kaffebrenneri ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
+                    WHERE ferdigbrendt_kaffe.beskrivelse LIKE '%floral%'
+                    UNION
+                    SELECT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
+                    FROM kaffesmaking
+                    INNER JOIN ferdigbrendt_kaffe ON ferdigbrendt_kaffe.kaffeID = kaffesmaking.kaffeID
+                    INNER JOIN kaffebrenneri ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
+                    WHERE kaffesmaking.notat LIKE '%floral%''""")
     brukerdata = cursor.fetchall()
     print(brukerdata)
-    fortsett = str(input('Ønsker du å prøve en ny brukerhistorie? (y/n) '))
-    match fortsett:
-        case 'y':
-            login()
-        case 'n':
-            exit()
 
 """ 
 En annen bruker er lei av å bli skuffet av vaskede kaffer og deres tidvis kjedelige smak, og ønsker derfor å søke etter kaffer fra Rwanda
@@ -118,20 +132,20 @@ brennerinavn og kaffenavn.
 
 def brukerhistorie5():
     cursor.execute("""SELECT DISTINCT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
-FROM ferdigbrendt_kaffe
-INNER JOIN kaffeparti
-ON ferdigbrendt_kaffe.partiID = kaffeparti.partiID
-INNER JOIN foredlingsmetode
-ON kaffeparti.metodenavn != 'vasket'
-INNER JOIN kaffebrenneri
-ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
-INNER JOIN kaffegaard
-ON kaffeparti.gaardsID = kaffegaard.gaardsID
-INNER JOIN region
-ON kaffegaard.regionID = region.regionID
-INNER JOIN land
-ON land.landID = region.regionID
-WHERE land.navn = 'Rwanda' OR land.navn = 'Colombia' """)
+                        FROM ferdigbrendt_kaffe
+                        INNER JOIN kaffeparti
+                        ON ferdigbrendt_kaffe.partiID = kaffeparti.partiID
+                        INNER JOIN foredlingsmetode
+                        ON kaffeparti.metodenavn != 'vasket'
+                        INNER JOIN kaffebrenneri
+                        ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
+                        INNER JOIN kaffegaard
+                        ON kaffeparti.gaardsID = kaffegaard.gaardsID
+                        INNER JOIN region
+                        ON kaffegaard.regionID = region.regionID
+                        INNER JOIN land
+                        ON land.landID = region.regionID
+                        WHERE land.navn = 'Rwanda' OR land.navn = 'Colombia' """)
     brukerdata = cursor.fetchall()
     print(brukerdata)
     fortsett = str(input('Ønsker du å prøve en ny brukerhistorie? (y/n) '))
@@ -141,49 +155,11 @@ WHERE land.navn = 'Rwanda' OR land.navn = 'Colombia' """)
         case 'n':
             exit()
 
-def program(brukerdata):
-    """Main program
-    Remember con.commit() after database update
-    """
-    print("Du er nå logget inn som " + str(brukerdata[1]))
-    print('Tast "k" for å opprette en ny kaffesmak-post\nTast "x" for å avslutte')
-    while True:
-        valg = str(input(""))
-        match valg:
-            case 'k':
-                kaffe_navn = str(input('Hvilken kaffe smakte du på? '))
-                byggeri_navn = str(input('Hvilket bryggeri kommer den fra? '))
-                poeng = int(input('Hvor mange poeng gir du den?(0-10) '))
-                notat = str(input('Legg gjerne til et notat som beskriver kaffen: '))
-                #utifra denne dataen skal brukerhistorie 1 oppfylles
-                #kaffenavn + bryggeri_navn kan gi kaffeID og bryggeriID   
-                pass
-            case 'x':
-                exit()
-
-
-def bestCoffeByPrice():
-    valg = str(input('Vil du se beste kaffer sammenlignet med pris? (y/n) '))
-    match valg:
-        case 'y':
-            cursor.execute("""
-                    SELECT kaffebrenneri.navn AS brennerinavn, ferdigbrendt_kaffe.navn AS kaffenavn, ferdigbrendt_kaffe.kronerPerKg, round((AVG(kaffesmaking.poeng)/ferdigbrendt_kaffe.kronerPerKg )*1000, 2) AS gjennomsnittscore
-                    FROM kaffesmaking
-                    JOIN ferdigbrendt_kaffe
-                    ON kaffesmaking.kaffeID = ferdigbrendt_kaffe.kaffeID
-                    JOIN kaffebrenneri
-                    ON kaffebrenneri.brenneriID = ferdigbrendt_kaffe.brenneriID
-                    GROUP by kaffesmaking.kaffeID
-                    ORDER by gjennomsnittscore  DESC""")
-            Beste = cursor.fetchall()
-            print(Beste)
-
 
 def main():
     """ Main """
-    print()
     login()
-
+    #program([1, "ola"])
     con.close()
 
 
