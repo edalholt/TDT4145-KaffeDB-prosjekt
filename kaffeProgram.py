@@ -109,8 +109,8 @@ def brukerhistorie1(brukerID):
 
     ferdigKaffe = cursor.fetchone()
     if (not ferdigKaffe):
-        print("Det finnes ingen kaffe i databasen med valgt navn og brenneri\n!Sendes til hovedmeny!\n")
-        program(brukerID)
+        print("Det finnes ingen kaffe i databasen med valgt navn og brenneri\nSendes til hovedmeny!\n")
+        return
     else:
         print("Kaffe finnes i databasen og er valgt")
 
