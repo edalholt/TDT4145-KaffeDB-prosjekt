@@ -19,5 +19,30 @@ GROUP by kaffesmaking.kaffeID
 ORDER by gjennomsnittscore  DESC
 
 --Brukerhistorie 4
+SELECT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
+FROM ferdigbrendt_kaffe
+INNER JOIN kaffebrenneri ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
+WHERE ferdigbrendt_kaffe.beskrivelse LIKE '%floral%'
+UNION
+SELECT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
+FROM kaffesmaking
+INNER JOIN ferdigbrendt_kaffe ON ferdigbrendt_kaffe.kaffeID = kaffesmaking.kaffeID
+INNER JOIN kaffebrenneri ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
+WHERE kaffesmaking.notat LIKE '%floral%'
 
 --Brukerhistorie 5
+SELECT DISTINCT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
+FROM ferdigbrendt_kaffe
+INNER JOIN kaffeparti
+ON ferdigbrendt_kaffe.partiID = kaffeparti.partiID
+INNER JOIN foredlingsmetode
+ON kaffeparti.metodenavn != 'vasket'
+INNER JOIN kaffebrenneri
+ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
+INNER JOIN kaffegaard
+ON kaffeparti.gaardsID = kaffegaard.gaardsID
+INNER JOIN region
+ON kaffegaard.regionID = region.regionID
+INNER JOIN land
+ON land.landID = region.regionID
+WHERE land.navn = 'Rwanda' OR land.navn = 'Colombia'
