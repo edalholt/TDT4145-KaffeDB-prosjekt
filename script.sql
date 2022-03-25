@@ -119,6 +119,7 @@ CREATE TABLE "kaffesmaking" (
 --Dummy data
 INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('ola@nordmann.no', 'kaffenorge', 'Ola Nordmann');
 INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('bob@nordmann.no', 'kaffe', 'Bob Nordmann');
+INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('evergood@nordmann.no', 'kaffe', 'Per Olsen');
 INSERT INTO land (navn) VALUES ('El Salvador');
 INSERT INTO region (navn, landID) VALUES ('Santa Ana', 1);
 INSERT INTO kaffegaard (navn, MOH, regionID) VALUES ('Nombre de Dios', 1500, 1);
@@ -140,7 +141,9 @@ INSERT INTO sendesTil (brenneriID, partiID) VALUES (1, 1);
 --Ekstra
 INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES ('veldig god', 10, date(), 1, 1);
 INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES ('ganske god', 5, date('2022-02-10'), 1, 2);
-INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES ('God nok', 8, date('2022-02-10'), 1, 2);
+INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES ('God nok', 8, date('2022-02-10'), 2, 2);
+INSERT INTO kaffesmaking (notat, poeng, dato, brukerID, kaffeID) VALUES ('Likte denne', 7, date('2022-02-10'), 3, 2);
+
 
 
 

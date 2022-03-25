@@ -1,4 +1,7 @@
 import sqlite3
+from datetime import date
+
+today = date.today()
 
 con = sqlite3.connect("kaffe.db")
 cursor = con.cursor()
@@ -7,7 +10,7 @@ cursor = con.cursor()
 def login():
     """"Login"""""
     """ ola@nordmann.no  kaffenorge """
-    print("Hei, velkommen til kaffebook")
+    print("Hei, velkommen til kaffeDB")
     #print("Vennligst logg inn")
     #mulighet for å registrere seg 
     #(INSERT INTO bruker (epost, passord, fulltNavn) VALUES ('ola@nordmann.no', 'kaffenorge', 'Ola Nordmann');)
@@ -29,13 +32,15 @@ def login():
         case '1':
             pass
         case '2':
+            brukerhistorie2()
             pass
         case '3':
+            brukerhistorie3()
             pass
         case '4':
-            Brukerhistorie4()
+            brukerhistorie4()
         case '5':
-            Brukerhistorie5()
+            brukerhistorie5()
         
 """ En bruker søker etter kaffer som er blitt beskrevet med ordet «floral»,
 enten av brukere eller brennerier. Brukeren skal få tilbake en liste med
@@ -44,8 +49,48 @@ brennerinavn og kaffenavn. """
 kaffesmaking.notat
 ferdigbrent_kaffe.beskrivelse 
 """
+def brukerhistorie1():
+    pass
 
-def Brukerhistorie4():
+def brukerhistorie2():
+    cursor.execute(f'''SELECT bruker.fulltNavn, count(DISTINCT kaffesmaking.kaffeID) as ulikeKaffer FROM kaffesmaking
+                INNER JOIN bruker
+                ON bruker.brukerID = kaffesmaking.brukerID AND date(kaffesmaking.dato) >= date("{today.year}-01-01")
+                GROUP BY bruker.brukerID
+                ORDER BY ulikeKaffer DESC;''')
+    leaderBoard = cursor.fetchall()
+
+    if(len(leaderBoard) < 1):
+        print("Ingen kaffesmakinger er registrert")
+    else:
+        print("\n----Toppliste over de som har smakt flest unike kaffer så langt i år----\n")
+        for i in range(len(leaderBoard)):
+            print(str(i+1)+".", leaderBoard[i][0], "har drukket", leaderBoard[i][1], "ulike kaffer")
+        print("-"*72)
+                
+
+def brukerhistorie3():
+    cursor.execute("""
+                    SELECT kaffebrenneri.navn AS brennerinavn, ferdigbrendt_kaffe.navn AS kaffenavn, ferdigbrendt_kaffe.kronerPerKg, round((AVG(kaffesmaking.poeng)/ferdigbrendt_kaffe.kronerPerKg )*1000, 2) AS gjennomsnittscore
+                    FROM kaffesmaking
+                    JOIN ferdigbrendt_kaffe
+                    ON kaffesmaking.kaffeID = ferdigbrendt_kaffe.kaffeID
+                    JOIN kaffebrenneri
+                    ON kaffebrenneri.brenneriID = ferdigbrendt_kaffe.brenneriID
+                    GROUP by kaffesmaking.kaffeID
+                    ORDER by gjennomsnittscore  DESC""")
+    beste = cursor.fetchall()
+    
+    if(len(beste) < 1):
+        print("Ingen kaffe er registrert")
+    else:
+        print("\n----Kaffe som gir mest for pengene sammenlignet med høyest gjennomsnittsscore kontra pris----\n")
+        for i in range(len(beste)):
+            print(str(i+1)+".", beste[i][0], "med kaffen", beste[i][1], "|Pris:", beste[i][2], "| Poengsum:", beste[i][3], "|")
+        print("-"*93)
+    
+
+def brukerhistorie4():
     cursor.execute("""SELECT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
 FROM ferdigbrendt_kaffe
 INNER JOIN kaffebrenneri ON ferdigbrendt_kaffe.brenneriID = kaffebrenneri.brenneriID
@@ -71,7 +116,7 @@ og Colombia som ikke er vaskede. Systemet returnerer en liste over
 brennerinavn og kaffenavn.
 """
 
-def Brukerhistorie5():
+def brukerhistorie5():
     cursor.execute("""SELECT DISTINCT ferdigbrendt_kaffe.navn as KaffeNavn, kaffebrenneri.navn as BrenneriNavn
 FROM ferdigbrendt_kaffe
 INNER JOIN kaffeparti
@@ -136,7 +181,6 @@ def bestCoffeByPrice():
 
 def main():
     """ Main """
-    bestCoffeByPrice()
     print()
     login()
 
